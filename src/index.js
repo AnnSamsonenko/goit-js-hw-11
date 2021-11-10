@@ -1,6 +1,6 @@
-import './css/styles.css';
-import debounce from 'lodash.debounce';
+import './sass/main.scss';
+import '../node_modules/modern-normalize/modern-normalize.css';
 import { Notify } from 'notiflix';
-import countriesListTemplate from './templates/countries-list.hbs';
-import countryCardTemplate from './templates/country-card.hbs';
-import CountriesApiService from './js/countries-api-service';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import * as bootstrap from 'bootstrap';
