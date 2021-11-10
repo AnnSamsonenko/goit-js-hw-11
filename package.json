@@ -3,14 +3,14 @@
   "version": "1.1.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://AnnSamsonenko.github.io/goit-js-hw-11.git",
+  "homepage": "https://AnnSamsonenko.github.io/goit-js-hw-11",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "parcel build src/*.html --public-url /goit-js-hw-11.git/"
+    "build": "parcel build src/*.html --public-url /goit-js-hw-11/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AnnSamsonenko/goit-js-hw-11.git"
+    "url": "git+https://github.com/AnnSamsonenko/goit-js-hw-11"
   },
   "keywords": [],
   "author": "Alexander Repeta <alexander.repeta@gmail.com>",
