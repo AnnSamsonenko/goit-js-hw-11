@@ -10,4 +10,4 @@ var t=arguments[3];function e(t){return(e="function"==typeof Symbol&&"symbol"==t
 },{}],"Focm":[function(require,module,exports) {
 "use strict";require("./sass/main.scss");var i=require("notiflix"),e=s(require("simplelightbox"));function s(i){return i&&i.__esModule?i:{default:i}}require("simplelightbox/dist/simple-lightbox.min.css");
 },{"./sass/main.scss":"clu1","notiflix":"hWOm","simplelightbox":"yx6k","simplelightbox/dist/simple-lightbox.min.css":"clu1"}]},{},["Focm"], null)
-//# sourceMappingURL=/goit-js-hw-11/src.04af8f29.js.map
+//# sourceMappingURL=/goit-js-hw-11/src.9a929b53.js.map
