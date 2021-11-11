@@ -1,1 +1,37 @@
-
+{{#each this}}
+  <div class='col'>
+    <article class='card h-100'>
+      <a href='#' class='card-link'>
+        <img src='{{webformatURL}}' class='card-img-top' alt='{{tags}}' loading='lazy' />
+      </a>
+      <div class='card-body'>
+        <ul class='card-list'>
+          <li class='card-item'>
+            <svg class='bi' width='24' height='24' fill='grey'>
+              <use xlink:href='./images/bootstrap-icons.svg#heart-fill'></use>
+            </svg>
+            <span class='card-text'>{{likes}}</span>
+          </li>
+          <li class='card-item'>
+            <svg class='bi' width='24' height='24' fill='grey'>
+              <use xlink:href='./images/bootstrap-icons.svg#eye-fill'></use>
+            </svg>
+            <span class='card-text'>{{views}}</span>
+          </li>
+          <li class='card-item'>
+            <svg class='bi' width='24' height='24' fill='grey'>
+              <use xlink:href='./images/bootstrap-icons.svg#chat-fill'></use>
+            </svg>
+            <span class='card-text'>{{comments}}</span>
+          </li>
+          <li class='card-item'>
+            <svg class='bi' width='24' height='24' fill='grey'>
+              <use xlink:href='./images/bootstrap-icons.svg#cloud-download-fill'></use>
+            </svg>
+            <span class='card-text'>{{downloads}}</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </div>
+{{/each}}

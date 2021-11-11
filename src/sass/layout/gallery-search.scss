@@ -5,6 +5,10 @@ ol {
   padding: 0;
 }
 
+.card-body {
+  padding: 8px;
+}
+
 .card-list {
   display: flex;
   flex: 1;
@@ -16,4 +20,18 @@ ol {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button.is-hidden {
+  display: none;
+}
+
+.button > .spinner.is-hidden {
+  display: none;
 }
