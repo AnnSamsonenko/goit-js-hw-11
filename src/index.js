@@ -1,4 +1,5 @@
 import './sass/main.scss';
+import 'material-icons/iconfont/two-tone.css';
 import { Notify } from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -7,51 +8,70 @@ import cardsTemplate from './templates/cards-grid.hbs';
 import LoadMoreBtn from './js/components/load-more-btn';
 
 const refs = {
-  searchForm: document.querySelector('#search-form'),
+  searchForm: document.querySelector('.input-group'),
   cardsContainer: document.querySelector('.gallery'),
 };
 
-console.log(refs.cardsContainer);
-
+const message = {
+  emptyString: 'Please, type your search query',
+  noMatchesFound: 'Sorry, there are no images matching your search query. Please try again.',
+};
+////////   CLASSES    ///////
 const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
   hidden: true,
 });
-
 const galleryApiService = new GalleryApiService();
-
-refs.searchForm.addEventListener('input', onSearch);
+//////// EVENT LISTENERS  //////
+refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.refs.button.addEventListener('click', fetchMarkup);
 
 function onSearch(e) {
   e.preventDefault();
 
-  galleryApiService.query = e.target.value;
+  galleryApiService.query = e.target.elements.searchQuery.value.trim();
 
   if (galleryApiService.query === '') {
-    Notify.failure('------');
+    Notify.info(message.emptyString);
+    loadMoreBtn.hide();
+    clearCardsContainer();
     return;
   }
-
   loadMoreBtn.show();
+  loadMoreBtn.disable();
   galleryApiService.resetPage();
   clearCardsContainer();
   fetchMarkup();
 }
 
 function fetchMarkup() {
-  loadMoreBtn.disable();
   galleryApiService.fetchCards().then(cards => {
-    console.log(cards);
+    if (!hasDataMatches(cards)) {
+      Notify.info(message.noMatchesFound);
+      loadMoreBtn.hide();
+      return;
+    }
+
+    loadMoreBtn.show();
+    loadMoreBtn.disable();
     appendCardsMarkup(cards);
     loadMoreBtn.enable();
+    loadMoreBtn.show();
   });
 }
 
-function appendCardsMarkup(cards) {
-  refs.cardsContainer.insertAdjacentHTML('beforeend', cardsTemplate({ ...cards.hits }));
+function appendCardsMarkup({ data }) {
+  console.log(data);
+  refs.cardsContainer.insertAdjacentHTML('beforeend', cardsTemplate({ ...data.hits }));
 }
 
 function clearCardsContainer() {
   refs.cardsContainer.innerHTML = '';
+}
+
+function hasDataMatches({ data }) {
+  if (data.total === 0) {
+    return false;
+  }
+  return true;
 }
