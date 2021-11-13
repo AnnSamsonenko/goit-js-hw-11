@@ -11,20 +11,16 @@ export default class GalleryApiService {
     this.pageSize = PER_PAGE;
   }
 
-  fetchCards() {
+  async fetchCards() {
     const url = `${BASE_URL}?${API_KEY}&q=${this.searchQuery}&image_type=photo&per_page=${this.pageSize}&page=${this.page}&orientation=horizontal&safesearch=true`;
 
-    return axios
-      .get(url)
-      .then(({ data }) => {
-        this.incrementPage();
+    const { data } = await axios.get(url);
+    this.incrementPage();
 
-        return {
-          data,
-          hasNextPage: this.page <= data.totalHits / this.pageSize,
-        };
-      })
-      .catch(console.log);
+    return {
+      data,
+      hasNextPage: this.page <= data.totalHits / this.pageSize,
+    };
   }
 
   incrementPage() {

@@ -5,27 +5,28 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import GalleryApiService from './js/gallery-api-service';
 import cardsTemplate from './templates/cards-grid.hbs';
-import LoadMoreBtn from './js/components/load-more-btn';
 
 const refs = {
   searchForm: document.querySelector('.input-group'),
   cardsContainer: document.querySelector('.gallery'),
+  loadMore: document.querySelector('#load-more'),
 };
 
 const message = {
   emptyString: 'Please, type your search query',
   noMatchesFound: 'Sorry, there are no images matching your search query. Please try again.',
   endOfSearchResults: "We're sorry, but you've reached the end of search results.",
+  error: 'Something goes wrong.',
 };
 ////////   CLASSES    ///////
-const loadMoreBtn = new LoadMoreBtn({
-  selector: '[data-action="load-more"]',
-  hidden: true,
-});
+
 const galleryApiService = new GalleryApiService();
+
 //////// EVENT LISTENERS  //////
+
 refs.searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchMarkup);
+
+//////// FUNCTIONS //////////
 
 function onSearch(e) {
   e.preventDefault();
@@ -34,36 +35,47 @@ function onSearch(e) {
 
   if (galleryApiService.query === '') {
     Notify.info(message.emptyString);
-    loadMoreBtn.hide();
     clearCardsContainer();
     return;
   }
-  loadMoreBtn.show();
-  loadMoreBtn.disable();
+
+  loadContent();
+}
+
+function loadContent() {
   galleryApiService.resetPage();
   clearCardsContainer();
   fetchMarkup();
 }
 
-function fetchMarkup() {
-  galleryApiService.fetchCards().then(({ data, hasNextPage }) => {
+async function fetchMarkup() {
+  try {
+    const { data, hasNextPage } = await galleryApiService.fetchCards();
+
     if (!hasDataMatches(data)) {
-      Notify.info(message.noMatchesFound);
-      loadMoreBtn.hide();
+      Notify.failure(message.noMatchesFound);
       return;
     }
 
-    loadMoreBtn.show();
-    loadMoreBtn.disable();
-    appendCardsMarkup(data);
-    loadMoreBtn.enable();
-    loadMoreBtn.show();
+    renderContent(data);
 
     if (!hasNextPage) {
       Notify.info(message.endOfSearchResults);
-      loadMoreBtn.hide();
+      observer.disconnect();
+      return;
     }
-  });
+
+    observer.observe(refs.loadMore);
+  } catch (error) {
+    Notify.failure(message.error);
+    console.log(error);
+  }
+}
+
+function renderContent(data) {
+  appendCardsMarkup(data);
+  const lightBox = new SimpleLightbox('.card-img-area');
+  lightBox.refresh();
 }
 
 function appendCardsMarkup(data) {
@@ -80,3 +92,15 @@ function hasDataMatches(data) {
   }
   return true;
 }
+
+function onEntry(entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && galleryApiService.query !== '') {
+      fetchMarkup();
+    }
+  });
+}
+
+const observer = new IntersectionObserver(onEntry, {
+  rootMargin: '150px',
+});
