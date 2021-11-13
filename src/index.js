@@ -20,9 +20,8 @@ const message = {
   error: 'Something goes wrong.',
 };
 ////////   CLASSES    ///////
-
 const galleryApiService = new GalleryApiService();
-
+let lightBox = null;
 //////// EVENT LISTENERS  //////
 
 refs.searchForm.addEventListener('submit', onSearch);
@@ -58,7 +57,8 @@ async function fetchMarkup() {
       return;
     }
 
-    renderContent(data);
+    appendCardsMarkup(data);
+    createLightBox();
 
     if (!hasNextPage) {
       Notify.info(message.endOfSearchResults);
@@ -73,9 +73,11 @@ async function fetchMarkup() {
   }
 }
 
-function renderContent(data) {
-  appendCardsMarkup(data);
-  const lightBox = new SimpleLightbox('.card-img-area');
+function createLightBox() {
+  if (!lightBox) {
+    lightBox = new SimpleLightbox('.card-img-area');
+  }
+
   lightBox.refresh();
 }
 
