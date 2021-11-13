@@ -15,6 +15,7 @@ const refs = {
 const message = {
   emptyString: 'Please, type your search query',
   noMatchesFound: 'Sorry, there are no images matching your search query. Please try again.',
+  endOfSearchResults: "We're sorry, but you've reached the end of search results.",
 };
 ////////   CLASSES    ///////
 const loadMoreBtn = new LoadMoreBtn({
@@ -45,8 +46,8 @@ function onSearch(e) {
 }
 
 function fetchMarkup() {
-  galleryApiService.fetchCards().then(cards => {
-    if (!hasDataMatches(cards)) {
+  galleryApiService.fetchCards().then(({ data, hasNextPage }) => {
+    if (!hasDataMatches(data)) {
       Notify.info(message.noMatchesFound);
       loadMoreBtn.hide();
       return;
@@ -54,14 +55,18 @@ function fetchMarkup() {
 
     loadMoreBtn.show();
     loadMoreBtn.disable();
-    appendCardsMarkup(cards);
+    appendCardsMarkup(data);
     loadMoreBtn.enable();
     loadMoreBtn.show();
+
+    if (!hasNextPage) {
+      Notify.info(message.endOfSearchResults);
+      loadMoreBtn.hide();
+    }
   });
 }
 
-function appendCardsMarkup({ data }) {
-  console.log(data);
+function appendCardsMarkup(data) {
   refs.cardsContainer.insertAdjacentHTML('beforeend', cardsTemplate({ ...data.hits }));
 }
 
@@ -69,7 +74,7 @@ function clearCardsContainer() {
   refs.cardsContainer.innerHTML = '';
 }
 
-function hasDataMatches({ data }) {
+function hasDataMatches(data) {
   if (data.total === 0) {
     return false;
   }
