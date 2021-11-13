@@ -5,6 +5,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import GalleryApiService from './js/gallery-api-service';
 import cardsTemplate from './templates/cards-grid.hbs';
+import 'animate.css';
 
 const refs = {
   searchForm: document.querySelector('.input-group'),
